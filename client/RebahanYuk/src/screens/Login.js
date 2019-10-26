@@ -2,17 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import {
-  View,
-  Button,
-  Text,
-  Item,
-  Input,
-  Form,
-  Label,
-  Thumbnail,
-  Icon,
-} from 'native-base';
+import {View, Button, Text, Item, Input, Form, Label, Icon} from 'native-base';
 // import config from '../../config-env';
 
 // import toonImg from '../Component/img/toon.jpg';

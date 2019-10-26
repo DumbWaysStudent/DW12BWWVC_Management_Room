@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       id_room: DataTypes.INTEGER,
       check_in: DataTypes.DATE,
       time: DataTypes.TIME,
+      is_booked: DataTypes.BOOLEAN,
       is_done: DataTypes.BOOLEAN
     },
     {}

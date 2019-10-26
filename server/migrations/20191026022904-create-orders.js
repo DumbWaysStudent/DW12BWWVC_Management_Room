@@ -37,6 +37,10 @@ module.exports = {
       is_done: {
         type: Sequelize.BOOLEAN
       },
+      is_booked: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
