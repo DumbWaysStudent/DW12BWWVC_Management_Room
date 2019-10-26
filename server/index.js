@@ -34,6 +34,8 @@ app.group("/api/v1", router => {
     authenticated,
     RebahansController.editCustomer
   );
+  router.get("/checkin", authenticated, RebahansController.showCheckIn);
+  router.post("/checkin", authenticated, RebahansController.addCheckIn);
 });
 
 app.listen(port, () => console.log(`Listening on port ${port} !`));

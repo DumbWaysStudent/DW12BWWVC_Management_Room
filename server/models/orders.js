@@ -8,19 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       check_in: DataTypes.DATE,
       time: DataTypes.TIME,
       is_booked: DataTypes.BOOLEAN,
-      is_done: DataTypes.BOOLEAN
+      is_done: DataTypes.BOOLEAN,
+      end_time: DataTypes.DATE
     },
     {}
   );
-  orders.associate = function(models) {
-    orders.belongsTo(models.customers, {
-      as: "idCustomer",
-      foreignKey: "id_customer"
-    });
-    orders.belongsTo(models.rooms, {
-      as: "idRoom",
-      foreignKey: "id_room"
-    });
-  };
+  orders.associate = function(models) {};
   return orders;
 };
