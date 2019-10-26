@@ -3,6 +3,7 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import Login from './src/screens/Login';
+import Rooms from './src/screens/Rooms';
 
 const signedOut = createStackNavigator(
   {
@@ -17,22 +18,22 @@ const signedOut = createStackNavigator(
   },
 );
 
-// const signedIn = createStackNavigator(
-//   {
-//     Home: {
-//       screen: ForYou,
-//       title: 'ForYou',
-//       navigationOptions: {header: null},
-//     },
-//   },
-//   {
-//     initialRouteName: 'ForYou',
-//   },
-// );
+const signedIn = createStackNavigator(
+  {
+    Rooms: {
+      screen: Rooms,
+      title: 'Rooms',
+      navigationOptions: {header: null},
+    },
+  },
+  {
+    initialRouteName: 'Rooms',
+  },
+);
 
 const Switch = createSwitchNavigator(
   {
-    // signedIn: signedIn,
+    signedIn: signedIn,
     signedOut: signedOut,
   },
   {

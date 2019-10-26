@@ -24,7 +24,7 @@ export default class Login extends Component {
   userLogin = () => {
     axios({
       method: 'POST',
-      url: `${config.API_URL}/login`,
+      url: `http://192.168.137.1:4000/api/v1/login`,
       data: {
         email: this.state.username,
         password: this.state.password,
@@ -40,8 +40,8 @@ export default class Login extends Component {
       if (login !== false) {
         AsyncStorage.setItem('token', this.state.token);
         AsyncStorage.setItem('id', JSON.stringify(this.state.id));
-        alert(`Selamat Datang kembali, ${response.data.name}`);
-        this.props.navigation.navigate('ForYou');
+        alert(`Selamat Datang kembali, ${response.data.email}`);
+        this.props.navigation.navigate('Rooms');
       } else {
         alert('Login Failed !!');
         console.log('Login Failed');
