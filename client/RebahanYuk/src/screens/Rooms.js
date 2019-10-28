@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {connect} from 'react-redux';
+import Modal from 'react-native-modal';
 import {
   Container,
   Header,
@@ -14,24 +16,27 @@ import {
   Icon,
   Text,
   View,
-  Row,
+  Fab,
+  Item,
+  Input,
 } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
-import Axios from 'axios';
+import * as actionRooms from '../redux/_actions/rooms';
 
-export default class Rooms extends Component {
+class Rooms extends Component {
   constructor() {
     super();
     this.state = {
-      rooms: [],
       token: null,
       id: null,
+      input: '',
+      modalVisible: false,
     };
   }
 
   async componentDidMount() {
     await this.getIdentity();
-    await this.fetchRooms();
+    await this.getRooms();
   }
 
   getIdentity = async () => {
@@ -42,19 +47,21 @@ export default class Rooms extends Component {
     });
   };
 
-  fetchRooms = () => {
-    Axios({
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${this.state.token}`,
-      },
-      url: 'http://192.168.137.1:4000/api/v1/rooms',
-    }).then(res => {
-      this.setState({
-        rooms: res.data,
-      });
-    });
+  getRooms = async () => {
+    await this.props.handleGetRooms((token = this.state.token));
+  };
+
+  postRooms = async () => {
+    this.toggleModal();
+    await this.props.handlePostRooms(
+      (token = this.state.token),
+      (input = this.state.input),
+    );
+    await this.getRooms();
+  };
+
+  toggleModal = () => {
+    this.setState({modalVisible: !this.state.modalVisible});
   };
 
   render() {
@@ -70,7 +77,7 @@ export default class Rooms extends Component {
 
         <Content>
           <FlatList
-            data={this.state.rooms}
+            data={this.props.rooms.data}
             numColumns={3}
             renderItem={({item}) => (
               <View key={item.id}>
@@ -85,15 +92,52 @@ export default class Rooms extends Component {
           />
         </Content>
 
+        <View>
+          <Fab
+            containerStyle={{}}
+            style={{backgroundColor: '#2e7eff'}}
+            position="bottomRight"
+            onPress={() => this.toggleModal()}>
+            <Icon type="FontAwesome5" name="plus" />
+          </Fab>
+        </View>
+
+        <Modal
+          isVisible={this.state.modalVisible}
+          onBackdropPress={() => this.toggleModal()}>
+          <View style={styles.modalcon}>
+            <Text style={styles.modaltxt}> ADD ROOM DATA </Text>
+            <Item>
+              <Icon type="FontAwesome5" name="bed" />
+              <Input
+                placeholder="Insert room name here !"
+                onChangeText={room => this.setState({input: room})}
+              />
+            </Item>
+            <Button
+              info
+              style={styles.btnmodal}
+              onPress={() => this.postRooms()}>
+              <Text> INSERT </Text>
+            </Button>
+            <Button
+              warning
+              style={styles.btnmodal}
+              onPress={() => this.toggleModal()}>
+              <Text> CANCEL </Text>
+            </Button>
+          </View>
+        </Modal>
+
         <Footer>
           <FooterTab style={styles.footer}>
-            <Button onPress={() => this.props.navigation.navigate('ForYou')}>
+            <Button onPress={() => this.props.navigation.navigate('CheckIn')}>
               <Icon name="ios-book" />
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('ForYou')}>
+            <Button onPress={() => this.props.navigation.navigate('Rooms')}>
               <Icon name="ios-bed" style={styles.icon} />
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('FavScreen')}>
+            <Button onPress={() => this.props.navigation.navigate('Customers')}>
               <Icon name="ios-person" />
             </Button>
             <Button onPress={() => this.props.navigation.navigate('Profile')}>
@@ -105,6 +149,24 @@ export default class Rooms extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    rooms: state.rooms,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    handleGetRooms: token => dispatch(actionRooms.handleGetRooms(token)),
+    handlePostRooms: (token, input) =>
+      dispatch(actionRooms.handlePostRooms(token, input)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Rooms);
 
 const styles = StyleSheet.create({
   header: {
@@ -118,13 +180,29 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#25b309',
     alignItems: 'center',
+    justifyContent: 'center',
     width: 110,
+    height: 60,
   },
   roomtxt: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 22,
   },
   icon: {
     color: 'white',
+  },
+  modalcon: {
+    padding: 20,
+    backgroundColor: 'white',
+  },
+  btnmodal: {
+    marginTop: 15,
+    justifyContent: 'center',
+  },
+  modaltxt: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
   },
 });
