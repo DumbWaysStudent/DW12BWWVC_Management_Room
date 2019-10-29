@@ -10,6 +10,7 @@ import Login from './src/screens/Login';
 import Rooms from './src/screens/Rooms';
 import Customers from './src/screens/Customers';
 import CheckIn from './src/screens/CheckIn';
+import Settings from './src/screens/Settings';
 
 const loginTabs = createStackNavigator(
   {
@@ -63,11 +64,25 @@ const checkInTabs = createStackNavigator(
   },
 );
 
+const settingsTabs = createStackNavigator(
+  {
+    Settings: {
+      screen: Settings,
+      title: 'Settings',
+      navigationOptions: {header: null},
+    },
+  },
+  {
+    initialRouteName: 'Settings',
+  },
+);
+
 const BottomTabs = createBottomTabNavigator(
   {
     CheckIn: checkInTabs,
     Rooms: roomsTabs,
     Customers: customersTabs,
+    Settings: settingsTabs,
   },
   {
     defaultNavigationOptions: ({navigation}) => ({
@@ -80,7 +95,7 @@ const BottomTabs = createBottomTabNavigator(
           iconName = `bed`;
         } else if (routeName === 'Customers') {
           iconName = `id-card`;
-        } else if (routeName === 'Setting') {
+        } else if (routeName === 'Settings') {
           iconName = `cog`;
         }
         return (
