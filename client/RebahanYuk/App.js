@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs';
 import {Provider} from 'react-redux';
+import {Icon} from 'native-base';
 
 import store from './src/redux/_store/store';
 import Login from './src/screens/Login';
@@ -9,7 +11,7 @@ import Rooms from './src/screens/Rooms';
 import Customers from './src/screens/Customers';
 import CheckIn from './src/screens/CheckIn';
 
-const signedOut = createStackNavigator(
+const loginTabs = createStackNavigator(
   {
     Login: {
       screen: Login,
@@ -22,21 +24,11 @@ const signedOut = createStackNavigator(
   },
 );
 
-const signedIn = createStackNavigator(
+const roomsTabs = createStackNavigator(
   {
     Rooms: {
       screen: Rooms,
       title: 'Rooms',
-      navigationOptions: {header: null},
-    },
-    Customers: {
-      screen: Customers,
-      title: 'Customers',
-      navigationOptions: {header: null},
-    },
-    CheckIn: {
-      screen: CheckIn,
-      title: 'CheckIn',
       navigationOptions: {header: null},
     },
   },
@@ -45,13 +37,81 @@ const signedIn = createStackNavigator(
   },
 );
 
-const Switch = createSwitchNavigator(
+const customersTabs = createStackNavigator(
   {
-    signedIn: signedIn,
-    signedOut: signedOut,
+    Customers: {
+      screen: Customers,
+      title: 'Customers',
+      navigationOptions: {header: null},
+    },
   },
   {
-    initialRouteName: 'signedOut',
+    initialRouteName: 'Customers',
+  },
+);
+
+const checkInTabs = createStackNavigator(
+  {
+    CheckIn: {
+      screen: CheckIn,
+      title: 'CheckIn',
+      navigationOptions: {header: null},
+    },
+  },
+  {
+    initialRouteName: 'CheckIn',
+  },
+);
+
+const BottomTabs = createBottomTabNavigator(
+  {
+    CheckIn: checkInTabs,
+    Rooms: roomsTabs,
+    Customers: customersTabs,
+  },
+  {
+    defaultNavigationOptions: ({navigation}) => ({
+      tabBarIcon: ({horizontal, tintColor}) => {
+        const {routeName} = navigation.state;
+        let iconName;
+        if (routeName === 'CheckIn') {
+          iconName = `check-circle`;
+        } else if (routeName === 'Rooms') {
+          iconName = `bed`;
+        } else if (routeName === 'Customers') {
+          iconName = `id-card`;
+        } else if (routeName === 'Setting') {
+          iconName = `cog`;
+        }
+        return (
+          <Icon
+            type="FontAwesome5"
+            name={iconName}
+            size={20}
+            style={{color: tintColor}}
+          />
+        );
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'white',
+      inactiveTintColor: '#00204f',
+      showLabel: true,
+      keyboardHidesTabBar: true,
+      style: {
+        backgroundColor: '#2e7eff',
+      },
+    },
+  },
+);
+
+const Switch = createSwitchNavigator(
+  {
+    loginTabs: loginTabs,
+    BottomTabs: BottomTabs,
+  },
+  {
+    initialRouteName: 'loginTabs',
   },
 );
 

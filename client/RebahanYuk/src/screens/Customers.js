@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {
   Container,
   Header,
   Title,
   Content,
-  Footer,
-  FooterTab,
   Button,
   Left,
   Right,
@@ -17,26 +16,32 @@ import {
   Fab,
   Item,
   Input,
+  List,
+  ListItem,
+  Thumbnail,
 } from 'native-base';
+import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage';
-import Axios from 'axios';
+import * as actionsCustomers from '../redux/_actions/customers';
 
-export default class Rooms extends Component {
+class Customers extends Component {
   constructor() {
     super();
     this.state = {
-      customers: [],
       token: null,
-      id: null,
-      identity: '',
+      idcustomer: '',
+      idcard: '',
       name: '',
       phone: '',
+      modalVisible: false,
+      eModalVisible: false,
+      isrefreshing: false,
     };
   }
 
   async componentDidMount() {
     await this.getIdentity();
-    await this.fetchCustomer();
+    await this.getCustomers();
   }
 
   getIdentity = async () => {
@@ -47,45 +52,56 @@ export default class Rooms extends Component {
     });
   };
 
-  fetchCustomer = () => {
-    Axios({
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${this.state.token}`,
-      },
-      url: 'http://192.168.137.1:4000/api/v1/customers',
-    }).then(res => {
-      this.setState({
-        customers: res.data,
-      });
+  getCustomers = () => {
+    this.props.handleGetCustomers((token = this.state.token));
+  };
+
+  postCustomer = async () => {
+    this.toggleModal();
+    await this.props.handlePostCustomers(
+      (token = this.state.token),
+      (name = this.state.name),
+      (idcard = this.state.idcard),
+      (phone = this.state.phone),
+    );
+    await this.getCustomers();
+  };
+
+  putCustomer = async () => {
+    this.eToggleModal();
+    await this.props.handlePutCustomers(
+      (token = this.state.token),
+      (name = this.state.name),
+      (idcard = this.state.idcard),
+      (phone = this.state.phone),
+      (idcustomer = this.state.idcustomer),
+    );
+    await this.getCustomers();
+  };
+
+  handlerefresh = async () => {
+    this.setState({isrefreshing: true});
+    await this.getCustomers;
+    this.setState({isrefreshing: false});
+  };
+
+  toggleModal = () => {
+    this.setState({modalVisible: !this.state.modalVisible});
+  };
+
+  eToggleModal = (idcustomer, name, idcard, phone) => {
+    this.setState({eModalVisible: !this.state.eModalVisible});
+    this.setState({
+      idcustomer,
+      name,
+      idcard,
+      phone,
     });
   };
 
-  postCustomer = () => {
-    Axios({
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${this.state.token}`,
-      },
-      url: 'http://192.168.137.1:4000/api/v1/customer',
-      data: {
-        identity: this.state.identity,
-        name: this.state.name,
-        phone: this.state.phone,
-      },
-    })
-      .then(res => {
-        console.log(res);
-        this.fetchCustomer();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
   render() {
+    const profImg =
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTXNM88jFoywO7jEY_mM_dMtHLeCDpAr5O6qRI5bWbxgYX9sLC-';
     return (
       <Container>
         <Header style={styles.header}>
@@ -98,61 +114,173 @@ export default class Rooms extends Component {
 
         <Content>
           <FlatList
-            data={this.state.customers}
+            data={this.props.customers.data}
+            onRefresh={this.handlerefresh}
+            refreshing={this.state.isrefreshing}
             renderItem={({item}) => (
               <View key={item.id}>
-                <TouchableOpacity>
-                  <View
-                    style={{borderWidth: 1, padding: 5, borderColor: 'black'}}>
-                    <Text> {item.identity} </Text>
-                    <Text> {item.name} </Text>
-                    <Text> {item.phone} </Text>
-                  </View>
-                </TouchableOpacity>
+                <List>
+                  <ListItem avatar>
+                    <Left>
+                      <Thumbnail
+                        source={{
+                          uri: `${profImg}`,
+                        }}
+                      />
+                    </Left>
+                    <Body>
+                      <Text style={styles.txtname}>{item.name}</Text>
+                      <Text note>{item.identity}</Text>
+                      <Text note>{item.phone}</Text>
+                    </Body>
+                    <Right>
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.eToggleModal(
+                            (idcustomer = item.id),
+                            (name = item.name),
+                            (idcard = item.identity),
+                            (phone = item.phone),
+                          )
+                        }>
+                        <Icon type="FontAwesome5" name="user-edit" />
+                      </TouchableOpacity>
+                    </Right>
+                  </ListItem>
+                </List>
               </View>
             )}
             keyExtractor={item => item.id}
           />
-
-          <Item>
-            <Input
-              placeholder="Identity"
-              onChangeText={id => this.setState({identity: id})}
-            />
-            <Input
-              placeholder="name"
-              onChangeText={name => this.setState({name})}
-            />
-            <Input
-              placeholder="phone"
-              onChangeText={phone => this.setState({phone})}
-            />
-          </Item>
-          <Button onPress={() => this.postCustomer()}>
-            <Text> Add Customer </Text>
-          </Button>
         </Content>
 
-        <Footer>
-          <FooterTab style={styles.footer}>
-            <Button onPress={() => this.props.navigation.navigate('CheckIn')}>
-              <Icon name="ios-book" />
+        <Modal
+          isVisible={this.state.modalVisible}
+          onBackdropPress={() => this.toggleModal()}>
+          <View style={styles.modalcon}>
+            <Text style={styles.modaltxt}> ADD CUSTOMERS FORMS </Text>
+            <Item>
+              <Icon type="FontAwesome5" name="users" />
+              <Input
+                placeholder="Name"
+                onChangeText={name => this.setState({name})}
+              />
+            </Item>
+            <Item>
+              <Icon type="FontAwesome5" name="id-badge" />
+              <Input
+                placeholder="Identity Number"
+                onChangeText={idcard => this.setState({idcard})}
+              />
+            </Item>
+            <Item>
+              <Icon type="FontAwesome5" name="phone" />
+              <Input
+                placeholder="Phone Number"
+                onChangeText={phone => this.setState({phone})}
+              />
+            </Item>
+            <Button
+              info
+              style={styles.btnmodal}
+              onPress={() => this.postCustomer()}>
+              <Text> INSERT </Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('Rooms')}>
-              <Icon name="ios-bed" />
+            <Button
+              warning
+              style={styles.btnmodal}
+              onPress={() => this.toggleModal()}>
+              <Text> CANCEL </Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('FavScreen')}>
-              <Icon name="ios-person" style={styles.icon} />
+          </View>
+        </Modal>
+
+        <Modal
+          isVisible={this.state.eModalVisible}
+          onBackdropPress={() => this.eToggleModal()}>
+          <View style={styles.modalcon}>
+            <Text style={styles.modaltxt}> EDIT CUSTOMERS FORMS </Text>
+            <Item>
+              <Icon type="FontAwesome5" name="users" />
+              <Input
+                value={this.state.name}
+                onChangeText={name => this.setState({name})}
+              />
+            </Item>
+            <Item>
+              <Icon type="FontAwesome5" name="id-badge" />
+              <Input
+                value={this.state.idcard}
+                onChangeText={idcard => this.setState({idcard})}
+              />
+            </Item>
+            <Item>
+              <Icon type="FontAwesome5" name="phone" />
+              <Input
+                value={this.state.phone}
+                onChangeText={phone => this.setState({phone})}
+              />
+            </Item>
+            <Button
+              info
+              style={styles.btnmodal}
+              onPress={() => this.putCustomer()}>
+              <Text> INSERT </Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('Profile')}>
-              <Icon name="ios-settings" />
+            <Button
+              warning
+              style={styles.btnmodal}
+              onPress={() => this.eToggleModal()}>
+              <Text> CANCEL </Text>
             </Button>
-          </FooterTab>
-        </Footer>
+          </View>
+        </Modal>
+
+        <View>
+          <Fab
+            containerStyle={{}}
+            style={{backgroundColor: '#2e7eff'}}
+            position="bottomRight"
+            onPress={() => this.toggleModal()}>
+            <Icon type="FontAwesome5" name="plus" />
+          </Fab>
+        </View>
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    customers: state.customers,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    handleGetCustomers: token =>
+      dispatch(actionsCustomers.handleGetCustomers(token)),
+    handlePostCustomers: (token, name, idcard, phone) =>
+      dispatch(
+        actionsCustomers.handlePostCustomers(token, name, idcard, phone),
+      ),
+    handlePutCustomers: (token, name, idcard, phone, idcustomer) =>
+      dispatch(
+        actionsCustomers.handlePutCustomers(
+          token,
+          name,
+          idcard,
+          phone,
+          idcustomer,
+        ),
+      ),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Customers);
 
 const styles = StyleSheet.create({
   header: {
@@ -161,18 +289,23 @@ const styles = StyleSheet.create({
   footer: {
     backgroundColor: '#2e7eff',
   },
-  room: {
-    margin: 13,
-    padding: 15,
-    backgroundColor: '#25b309',
-    alignItems: 'center',
-    width: 110,
-  },
-  roomtxt: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
   icon: {
     color: 'white',
+  },
+  txtname: {
+    fontWeight: 'bold',
+  },
+  modalcon: {
+    padding: 20,
+    backgroundColor: 'white',
+  },
+  btnmodal: {
+    marginTop: 15,
+    justifyContent: 'center',
+  },
+  modaltxt: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
   },
 });

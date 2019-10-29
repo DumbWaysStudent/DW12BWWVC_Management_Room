@@ -3,9 +3,6 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {View, Button, Text, Item, Input, Form, Label, Icon} from 'native-base';
-// import config from '../../config-env';
-
-// import toonImg from '../Component/img/toon.jpg';
 
 export default class Login extends Component {
   constructor() {
@@ -40,7 +37,6 @@ export default class Login extends Component {
       if (login !== false) {
         AsyncStorage.setItem('token', this.state.token);
         AsyncStorage.setItem('id', JSON.stringify(this.state.id));
-        alert(`Selamat Datang kembali, ${response.data.email}`);
         this.props.navigation.navigate('Rooms');
       } else {
         alert('Login Failed !!');

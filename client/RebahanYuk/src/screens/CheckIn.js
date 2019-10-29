@@ -5,18 +5,12 @@ import {
   Header,
   Title,
   Content,
-  Footer,
-  FooterTab,
-  Button,
   Left,
   Right,
   Body,
   Icon,
   Text,
   View,
-  Fab,
-  Item,
-  Input,
 } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import Axios from 'axios';
@@ -108,23 +102,6 @@ export default class Rooms extends Component {
             keyExtractor={item => item.id}
           />
         </Content>
-
-        <Footer>
-          <FooterTab style={styles.footer}>
-            <Button onPress={() => this.props.navigation.navigate('CheckIn')}>
-              <Icon name="ios-book" style={styles.icon} />
-            </Button>
-            <Button onPress={() => this.props.navigation.navigate('Rooms')}>
-              <Icon name="ios-bed" />
-            </Button>
-            <Button onPress={() => this.props.navigation.navigate('Customers')}>
-              <Icon name="ios-person" />
-            </Button>
-            <Button onPress={() => this.props.navigation.navigate('Profile')}>
-              <Icon name="ios-settings" />
-            </Button>
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }

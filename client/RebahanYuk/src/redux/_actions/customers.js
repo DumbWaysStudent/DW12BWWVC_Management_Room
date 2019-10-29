@@ -1,44 +1,48 @@
 import * as types from '../types';
 import {axios, api_url} from '../../api-url';
 
-export const handleGetRooms = token => ({
-  type: types.GET_ROOMS,
+export const handleGetCustomers = token => ({
+  type: types.GET_CUSTOMERS,
   payload: axios({
     method: 'GET',
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-    url: `${api_url}/rooms`,
+    url: `${api_url}/customers`,
   }),
 });
 
-export const handlePostRooms = (token, input) => ({
-  type: types.POST_ROOMS,
+export const handlePostCustomers = (token, name, idcard, phone) => ({
+  type: types.POST_CUSTOMERS,
   payload: axios({
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-    url: `${api_url}/room`,
+    url: `${api_url}/customer`,
     data: {
-      room: input,
+      identity: idcard,
+      name: name,
+      phone: phone,
     },
   }),
 });
 
-export const handlePutRooms = (token, idRoom, room) => ({
-  type: types.PUT_ROOMS,
+export const handlePutCustomers = (token, name, idcard, phone, idcustomer) => ({
+  type: types.PUT_CUSTOMERS,
   payload: axios({
     method: 'PUT',
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-    url: `${api_url}/room/${idRoom}`,
+    url: `${api_url}/customer/${idcustomer}`,
     data: {
-      room: room,
+      identity: idcard,
+      name: name,
+      phone: phone,
     },
   }),
 });

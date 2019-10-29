@@ -7,8 +7,6 @@ import {
   Header,
   Title,
   Content,
-  Footer,
-  FooterTab,
   Button,
   Left,
   Right,
@@ -28,9 +26,10 @@ class Rooms extends Component {
     super();
     this.state = {
       token: null,
-      id: null,
+      idRoom: '',
       input: '',
       modalVisible: false,
+      eModalVisible: false,
     };
   }
 
@@ -60,8 +59,26 @@ class Rooms extends Component {
     await this.getRooms();
   };
 
+  putRooms = async () => {
+    this.eToggleModal();
+    await this.props.handlePutRooms(
+      (token = this.state.token),
+      (idRoom = this.state.idRoom),
+      (room = this.state.input),
+    );
+    await this.getRooms();
+  };
+
   toggleModal = () => {
     this.setState({modalVisible: !this.state.modalVisible});
+  };
+
+  eToggleModal = (idRoom, room) => {
+    this.setState({
+      idRoom,
+      input: room,
+    });
+    this.setState({eModalVisible: !this.state.eModalVisible});
   };
 
   render() {
@@ -81,7 +98,10 @@ class Rooms extends Component {
             numColumns={3}
             renderItem={({item}) => (
               <View key={item.id}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.eToggleModal((idRoom = item.id), (room = item.room))
+                  }>
                   <View style={styles.room}>
                     <Text style={styles.roomtxt}> {item.room} </Text>
                   </View>
@@ -129,22 +149,32 @@ class Rooms extends Component {
           </View>
         </Modal>
 
-        <Footer>
-          <FooterTab style={styles.footer}>
-            <Button onPress={() => this.props.navigation.navigate('CheckIn')}>
-              <Icon name="ios-book" />
+        <Modal
+          isVisible={this.state.eModalVisible}
+          onBackdropPress={() => this.eToggleModal()}>
+          <View style={styles.modalcon}>
+            <Text style={styles.modaltxt}> EDIT ROOMS </Text>
+            <Item>
+              <Icon type="FontAwesome5" name="bed" />
+              <Input
+                value={this.state.input}
+                onChangeText={input => this.setState({input})}
+              />
+            </Item>
+            <Button
+              info
+              style={styles.btnmodal}
+              onPress={() => this.putRooms()}>
+              <Text> INSERT </Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('Rooms')}>
-              <Icon name="ios-bed" style={styles.icon} />
+            <Button
+              warning
+              style={styles.btnmodal}
+              onPress={() => this.eToggleModal()}>
+              <Text> CANCEL </Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate('Customers')}>
-              <Icon name="ios-person" />
-            </Button>
-            <Button onPress={() => this.props.navigation.navigate('Profile')}>
-              <Icon name="ios-settings" />
-            </Button>
-          </FooterTab>
-        </Footer>
+          </View>
+        </Modal>
       </Container>
     );
   }
@@ -160,6 +190,8 @@ const mapDispatchToProps = dispatch => {
     handleGetRooms: token => dispatch(actionRooms.handleGetRooms(token)),
     handlePostRooms: (token, input) =>
       dispatch(actionRooms.handlePostRooms(token, input)),
+    handlePutRooms: (token, idRoom, room) =>
+      dispatch(actionRooms.handlePutRooms(token, idRoom, room)),
   };
 };
 
@@ -178,14 +210,16 @@ const styles = StyleSheet.create({
   room: {
     margin: 13,
     padding: 10,
-    backgroundColor: '#25b309',
+    borderRadius: 10,
+    borderColor: '#2e7eff',
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
     width: 110,
     height: 60,
   },
   roomtxt: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 22,
   },
