@@ -112,47 +112,45 @@ class Customers extends Component {
           <Right />
         </Header>
 
-        <Content>
-          <FlatList
-            data={this.props.customers.data}
-            onRefresh={this.handlerefresh}
-            refreshing={this.state.isrefreshing}
-            renderItem={({item}) => (
-              <View key={item.id}>
-                <List>
-                  <ListItem avatar>
-                    <Left>
-                      <Thumbnail
-                        source={{
-                          uri: `${profImg}`,
-                        }}
-                      />
-                    </Left>
-                    <Body>
-                      <Text style={styles.txtname}>{item.name}</Text>
-                      <Text note>{item.identity}</Text>
-                      <Text note>{item.phone}</Text>
-                    </Body>
-                    <Right>
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.eToggleModal(
-                            (idcustomer = item.id),
-                            (name = item.name),
-                            (idcard = item.identity),
-                            (phone = item.phone),
-                          )
-                        }>
-                        <Icon type="FontAwesome5" name="user-edit" />
-                      </TouchableOpacity>
-                    </Right>
-                  </ListItem>
-                </List>
-              </View>
-            )}
-            keyExtractor={item => item.id}
-          />
-        </Content>
+        <FlatList
+          data={this.props.customers.data}
+          onRefresh={this.handlerefresh}
+          refreshing={this.state.isrefreshing}
+          renderItem={({item}) => (
+            <View key={item.id}>
+              <List>
+                <ListItem avatar>
+                  <Left>
+                    <Thumbnail
+                      source={{
+                        uri: `${profImg}`,
+                      }}
+                    />
+                  </Left>
+                  <Body>
+                    <Text style={styles.txtname}>{item.name}</Text>
+                    <Text note>{item.identity}</Text>
+                    <Text note>{item.phone}</Text>
+                  </Body>
+                  <Right>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.eToggleModal(
+                          (idcustomer = item.id),
+                          (name = item.name),
+                          (idcard = item.identity),
+                          (phone = item.phone),
+                        )
+                      }>
+                      <Icon type="FontAwesome5" name="user-edit" />
+                    </TouchableOpacity>
+                  </Right>
+                </ListItem>
+              </List>
+            </View>
+          )}
+          keyExtractor={item => item.id}
+        />
 
         <Modal
           isVisible={this.state.modalVisible}

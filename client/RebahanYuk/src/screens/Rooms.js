@@ -92,25 +92,23 @@ class Rooms extends Component {
           <Right />
         </Header>
 
-        <Content>
-          <FlatList
-            data={this.props.rooms.data}
-            numColumns={3}
-            renderItem={({item}) => (
-              <View key={item.id}>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.eToggleModal((idRoom = item.id), (room = item.room))
-                  }>
-                  <View style={styles.room}>
-                    <Text style={styles.roomtxt}> {item.room} </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
-            keyExtractor={item => item.id}
-          />
-        </Content>
+        <FlatList
+          data={this.props.rooms.data}
+          numColumns={3}
+          renderItem={({item}) => (
+            <View key={item.id}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.eToggleModal((idRoom = item.id), (room = item.room))
+                }>
+                <View style={styles.room}>
+                  <Text style={styles.roomtxt}> {item.room} </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+          keyExtractor={item => item.id}
+        />
 
         <View>
           <Fab
