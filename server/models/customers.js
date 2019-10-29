@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
   customers.associate = function(models) {
     customers.belongsToMany(models.rooms, {
       through: "orders",
-      as: "room",
-      foreignKey: "id_customer",
-      otherKey: "id_room"
+      foreignKey: "id_customer"
+      // as: "room",
+      // otherKey: "id_room"
     });
   };
   return customers;

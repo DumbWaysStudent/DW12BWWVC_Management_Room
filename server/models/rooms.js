@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
   rooms.associate = function(models) {
     rooms.belongsToMany(models.customers, {
       through: "orders",
-      as: "customer",
-      foreignKey: "id_room",
-      otherKey: "id_customer"
+      foreignKey: "id_room"
+      // as: "customer",
+      // otherKey: "id_customer"
     });
   };
   return rooms;

@@ -108,23 +108,16 @@ exports.editCustomer = (req, res) => {
 
 exports.showCheckIn = (req, res) => {
   Rooms.findAll({
-    include: {
-      model: Customers,
-      as: "customer",
-      attributes: {
-        exclude: ["updatedAt", "createdAt"]
-      },
-      through: {
-        model: Orders,
-        as: "order",
-        attributes: {
-          exclude: ["updatedAt", "createdAt"]
+    include: [
+      {
+        model: Customers,
+        through: {
+          model: Orders
         }
       }
-    },
-    attributes: ["id", "room"]
+    ]
   }).then(data => {
-    res.send(data);
+    res.send(getCheckIn(data));
   });
 };
 
@@ -144,4 +137,38 @@ exports.addCheckIn = (req, res) => {
     .catch(err => {
       console.log(err);
     });
+};
+
+const getCheckIn = data => {
+  const newData = data.map(item => {
+    const customer = item.customers.map(entry => {
+      const { id, identity, name, phone } = entry;
+      const newCustomers = {
+        id,
+        identity,
+        name,
+        phone
+      };
+      return newCustomers;
+    });
+    const order = item.customers.map(entry => {
+      const { id, is_booked, is_done, time, end_time } = entry.orders;
+      const newOrders = {
+        id,
+        is_booked,
+        is_done,
+        time,
+        end_time
+      };
+      return newOrders;
+    });
+    const newItem = {
+      id: item.id,
+      room: item.room,
+      customer: customer[0],
+      order: order[0]
+    };
+    return newItem;
+  });
+  return newData;
 };
