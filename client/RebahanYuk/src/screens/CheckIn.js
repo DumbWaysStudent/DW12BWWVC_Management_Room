@@ -12,23 +12,31 @@ import {
   Text,
   View,
 } from 'native-base';
+import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
-import Axios from 'axios';
+import * as actionCheckIn from '../redux/_actions/checkin';
 
-export default class Rooms extends Component {
+// class RoomBooked extends Component {
+//   render() {
+//     return (
+//       <View style={styles.room}>
+//         <Text style={styles.roomtxt}> {item.room} </Text>
+//       </View>
+//     );
+//   }
+// }
+
+class CheckIn extends Component {
   constructor() {
     super();
     this.state = {
-      rooms: [],
       token: null,
-      id: null,
-      input: '',
     };
   }
 
   async componentDidMount() {
     await this.getIdentity();
-    await this.fetchRooms();
+    await this.getCheckIn();
   }
 
   getIdentity = async () => {
@@ -39,40 +47,40 @@ export default class Rooms extends Component {
     });
   };
 
-  fetchRooms = () => {
-    Axios({
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${this.state.token}`,
-      },
-      url: 'http://192.168.137.1:4000/api/v1/rooms',
-    }).then(res => {
-      this.setState({
-        rooms: res.data,
-      });
-    });
+  getCheckIn = () => {
+    this.props.handleGetCheckIn((token = this.state.token));
   };
 
-  postRoom = () => {
-    Axios({
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${this.state.token}`,
-      },
-      url: 'http://192.168.137.1:4000/api/v1/room',
-      data: {
-        room: this.state.input,
-      },
-    })
-      .then(res => {
-        console.log(res);
-        this.fetchRooms();
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  // renderCheckin = (item) => {
+  //   if (item.customer.length >) {
+  //     return (
+  //       <View style={styles.room}>
+  //         <Text style={styles.roomtxt}> {item.room} </Text>
+  //       </View>
+  //     );
+  //   } else {
+  //     return (
+  //       <View style={styles.roomDisable}>
+  //         <Text style={styles.roomtxtDisable}> {item.room} </Text>
+  //       </View>
+  //     );
+  //   }
+  // };
+
+  RoomActive = room => {
+    return (
+      <View style={styles.room}>
+        <Text style={styles.roomtxt}> {room} </Text>
+      </View>
+    );
+  };
+
+  RoomDisable = room => {
+    return (
+      <View style={styles.roomDisable}>
+        <Text style={styles.roomtxtDisable}> {room} </Text>
+      </View>
+    );
   };
 
   render() {
@@ -88,14 +96,15 @@ export default class Rooms extends Component {
 
         <Content>
           <FlatList
-            data={this.state.rooms}
+            data={this.props.checkin.data}
             numColumns={3}
             renderItem={({item}) => (
               <View key={item.id}>
+                {console.log(item)}
                 <TouchableOpacity>
-                  <View style={styles.room}>
-                    <Text style={styles.roomtxt}> {item.room} </Text>
-                  </View>
+                  {item.order && item.order.is_booked
+                    ? this.RoomActive(item.room)
+                    : this.RoomDisable(item.room)}
                 </TouchableOpacity>
               </View>
             )}
@@ -107,6 +116,23 @@ export default class Rooms extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    checkin: state.checkin,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    handleGetCheckIn: token => dispatch(actionCheckIn.handleGetCheckIn(token)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CheckIn);
+
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#2e7eff',
@@ -117,13 +143,32 @@ const styles = StyleSheet.create({
   room: {
     margin: 13,
     padding: 10,
-    backgroundColor: '#25b309',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     width: 110,
+    height: 70,
+    backgroundColor: '#45aaf2',
   },
   roomtxt: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 22,
+  },
+  roomDisable: {
+    margin: 13,
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 110,
+    height: 70,
+    backgroundColor: '#d1d8e0',
+  },
+  roomtxtDisable: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 22,
   },
   icon: {
     color: 'white',

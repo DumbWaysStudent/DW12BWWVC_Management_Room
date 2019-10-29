@@ -112,7 +112,8 @@ exports.showCheckIn = (req, res) => {
       {
         model: Customers,
         through: {
-          model: Orders
+          model: Orders,
+          where: { is_done: false }
         }
       }
     ]
