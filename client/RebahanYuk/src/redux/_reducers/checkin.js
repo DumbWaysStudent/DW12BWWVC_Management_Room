@@ -30,6 +30,12 @@ export default reducersCheckIn = (state = initialState, action) => {
         isError: true,
       };
     }
+    case `${types.POST_CHECKIN}`: {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     default: {
       return state;
     }

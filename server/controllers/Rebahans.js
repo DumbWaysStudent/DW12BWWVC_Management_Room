@@ -1,4 +1,6 @@
+const moment = require("moment");
 const models = require("../models");
+
 const Users = models.users;
 const Rooms = models.rooms;
 const Customers = models.customers;
@@ -126,9 +128,8 @@ exports.addCheckIn = (req, res) => {
   Orders.create({
     id_room: req.body.id_room,
     id_customer: req.body.id_customer,
-    check_in: new Date(),
-    time: req.body.time,
-    end_time: req.body.end_time,
+    duration: req.body.duration,
+    end_time: moment().add(req.body.duration, "minutes"),
     is_done: false,
     is_booked: true
   })
@@ -153,12 +154,12 @@ const getCheckIn = data => {
       return newCustomers;
     });
     const order = item.customers.map(entry => {
-      const { id, is_booked, is_done, time, end_time } = entry.orders;
+      const { id, is_booked, is_done, duration, end_time } = entry.orders;
       const newOrders = {
         id,
         is_booked,
         is_done,
-        time,
+        duration,
         end_time
       };
       return newOrders;

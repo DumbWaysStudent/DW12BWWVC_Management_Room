@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {StyleSheet, TouchableOpacity, FlatList, Picker} from 'react-native';
 import {
   Container,
   Header,
   Title,
-  Content,
   Left,
   Right,
   Body,
@@ -14,7 +13,6 @@ import {
   Item,
   Input,
   Button,
-  Picker,
   Form,
   Label,
 } from 'native-base';
@@ -31,11 +29,12 @@ class CheckIn extends Component {
       token: null,
       CheckInVisible: false,
       CheckOutVisible: false,
-      selected2: undefined,
       room: '',
       customer: '',
-      duration: '',
       orderId: '',
+      idRoom: '',
+      idCustomer: '',
+      duration: '',
     };
   }
 
@@ -57,7 +56,12 @@ class CheckIn extends Component {
     this.props.handleGetCheckIn((token = this.state.token));
   };
 
-  toggleCheckInModal() {
+  toggleCheckInModal(idRoom, room) {
+    this.setState({idRoom, room});
+    this.setState({CheckInVisible: !this.state.CheckInVisible});
+  }
+
+  toggleCancelCheckIn() {
     this.setState({CheckInVisible: !this.state.CheckInVisible});
   }
 
@@ -71,13 +75,19 @@ class CheckIn extends Component {
     this.setState({CheckOutVisible: !this.state.CheckOutVisible});
   }
 
+  toogleCancelCheckOut() {
+    this.setState({CheckOutVisible: !this.state.CheckOutVisible});
+  }
+
   getCustomers = () => {
     this.props.handleGetCustomers((token = this.state.token));
   };
 
   RoomActive = item => {
+    const idRoom = item.id;
+    const room = item.room;
     return (
-      <TouchableOpacity onPress={() => this.toggleCheckInModal()}>
+      <TouchableOpacity onPress={() => this.toggleCheckInModal(idRoom, room)}>
         <View style={styles.room}>
           <Text style={styles.roomtxt}> {item.room} </Text>
         </View>
@@ -88,7 +98,7 @@ class CheckIn extends Component {
   RoomDisable = item => {
     const room = item.room;
     const customer = item.customer.name;
-    const duration = item.order.time;
+    const duration = item.order.duration;
     const orderId = item.order.id;
     return (
       <TouchableOpacity
@@ -102,11 +112,16 @@ class CheckIn extends Component {
     );
   };
 
-  onValueChange2(value) {
-    this.setState({
-      selected2: value,
-    });
-  }
+  checkInPost = async () => {
+    const token = this.state.token;
+    const idRoom = this.state.idRoom;
+    const idCustomer = this.state.idCustomer;
+    const duration = this.state.duration;
+
+    this.toggleCancelCheckIn();
+    await this.props.handlePostCheckIn(token, idRoom, idCustomer, duration);
+    await this.getCheckIn();
+  };
 
   render() {
     return (
@@ -140,33 +155,40 @@ class CheckIn extends Component {
             <Form>
               <Label style={styles.modalformlabel}>Room Name</Label>
               <Item regular>
-                <Input />
+                <Input
+                  disabled
+                  value={this.state.room}
+                  style={{backgroundColor: '#a5b1c2'}}
+                />
               </Item>
               <Label style={[styles.modalformlabel, {marginTop: 10}]}>
                 Customer
               </Label>
-              <Item picker>
-                <Picker
-                  mode="dropdown"
-                  iosIcon={<Icon name="arrow-down" />}
-                  selectedValue={this.state.selected2}
-                  onValueChange={this.onValueChange2.bind(this)}>
-                  {this.props.customers.data.map(data => (
-                    <Picker.Item label={data.name} value={data.name} />
-                  ))}
-                </Picker>
-              </Item>
+              <Picker
+                selectedValue={this.state.idCustomer}
+                style={{height: 50, width: 340}}
+                onValueChange={itemValue =>
+                  this.setState({idCustomer: itemValue})
+                }>
+                {this.props.customers.data.map(pick => (
+                  <Picker.Item
+                    key={pick.id}
+                    label={pick.name}
+                    value={pick.id}
+                  />
+                ))}
+              </Picker>
               <Label style={[styles.modalformlabel, {marginTop: 10}]}>
                 Duration <Text note> (minutes) </Text>
               </Label>
               <Item regular>
-                <Input />
+                <Input onChangeText={data => this.setState({duration: data})} />
               </Item>
             </Form>
             <Button
               info
               style={styles.btnmodal}
-              onPress={() => this.postRooms()}>
+              onPress={() => this.checkInPost()}>
               <Text> SAVE </Text>
             </Button>
             <Button
@@ -180,7 +202,7 @@ class CheckIn extends Component {
 
         <Modal
           isVisible={this.state.CheckOutVisible}
-          onBackdropPress={() => this.toggleCheckOutModal()}>
+          onBackdropPress={() => this.toogleCancelCheckOut()}>
           <View style={styles.modalcon}>
             <Text style={styles.modaltxt}>CheckOut</Text>
             <Form>
@@ -208,7 +230,7 @@ class CheckIn extends Component {
               <Item regular>
                 <Input
                   disabled
-                  value={this.state.duration}
+                  value={this.state.duration.toString()}
                   style={{backgroundColor: '#a5b1c2'}}
                 />
               </Item>
@@ -222,7 +244,7 @@ class CheckIn extends Component {
             <Button
               warning
               style={styles.btnmodal}
-              onPress={() => this.toggleCheckOutModal()}>
+              onPress={() => this.toogleCancelCheckOut()}>
               <Text> CANCEL </Text>
             </Button>
           </View>
@@ -244,6 +266,10 @@ const mapDispatchToProps = dispatch => {
     handleGetCheckIn: token => dispatch(actionsCheckIn.handleGetCheckIn(token)),
     handleGetCustomers: token =>
       dispatch(actionsCustomers.handleGetCustomers(token)),
+    handlePostCheckIn: (token, idRoom, idCustomer, duration) =>
+      dispatch(
+        actionsCheckIn.handlePostCheckIn(token, idRoom, idCustomer, duration),
+      ),
   };
 };
 

@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       id_customer: DataTypes.INTEGER,
       id_room: DataTypes.INTEGER,
-      check_in: DataTypes.DATE,
-      time: DataTypes.TIME,
+      duration: DataTypes.INTEGER,
       is_booked: DataTypes.BOOLEAN,
       is_done: DataTypes.BOOLEAN,
       end_time: DataTypes.DATE

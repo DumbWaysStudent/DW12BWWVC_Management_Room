@@ -7,3 +7,4 @@ export const POST_CUSTOMERS = 'POST_CUSTOMERS';
 export const PUT_CUSTOMERS = 'PUT_CUSTOMERS';
 
 export const GET_CHECKIN = 'GET_CHECKIN';
+export const POST_CHECKIN = 'POST_CHECKIN';
