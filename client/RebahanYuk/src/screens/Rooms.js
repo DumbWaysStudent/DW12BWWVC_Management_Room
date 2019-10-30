@@ -22,6 +22,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {MaterialIndicator} from 'react-native-indicators';
 import * as actionRooms from '../redux/_actions/rooms';
 
+import * as color from '../assets/color';
+
 class Rooms extends Component {
   constructor() {
     super();
@@ -86,7 +88,7 @@ class Rooms extends Component {
     if (this.props.rooms.isLoading) {
       return (
         <MaterialIndicator
-          color="#2e7eff"
+          color={color.orange}
           animating={true}
           style={{
             flex: 1,
@@ -99,9 +101,16 @@ class Rooms extends Component {
     }
 
     return (
-      <Container>
+      <Container style={styles.container}>
         <Header style={styles.header}>
-          <Left />
+          <Left>
+            <Icon
+              type="FontAwesome"
+              name="bed"
+              size={20}
+              style={{color: 'white'}}
+            />
+          </Left>
           <Body>
             <Title>Rooms List</Title>
           </Body>
@@ -129,7 +138,7 @@ class Rooms extends Component {
         <View>
           <Fab
             containerStyle={{}}
-            style={{backgroundColor: '#2e7eff'}}
+            style={{backgroundColor: color.orange}}
             position="bottomRight"
             onPress={() => this.toggleModal()}>
             <Icon type="FontAwesome5" name="plus" />
@@ -216,17 +225,15 @@ export default connect(
 )(Rooms);
 
 const styles = StyleSheet.create({
+  container: {},
   header: {
-    backgroundColor: '#2e7eff',
-  },
-  footer: {
-    backgroundColor: '#2e7eff',
+    backgroundColor: color.orange,
   },
   room: {
     margin: 13,
     padding: 10,
     borderRadius: 10,
-    borderColor: '#45aaf2',
+    borderColor: color.orange,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',

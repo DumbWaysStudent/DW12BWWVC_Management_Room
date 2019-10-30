@@ -11,8 +11,10 @@ import {
   Body,
   Text,
   Button,
+  Icon,
 } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
+import * as color from '../assets/color';
 
 class Settings extends Component {
   constructor() {
@@ -48,7 +50,14 @@ class Settings extends Component {
     return (
       <Container>
         <Header style={styles.header}>
-          <Left />
+          <Left>
+            <Icon
+              type="FontAwesome"
+              name="cog"
+              size={20}
+              style={{color: 'white'}}
+            />
+          </Left>
           <Body>
             <Title> Settings </Title>
           </Body>
@@ -90,7 +99,7 @@ export default connect(
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#2e7eff',
+    backgroundColor: color.orange,
   },
   footer: {
     backgroundColor: '#2e7eff',

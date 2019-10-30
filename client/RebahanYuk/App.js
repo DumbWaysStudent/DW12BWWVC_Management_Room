@@ -11,6 +11,7 @@ import Rooms from './src/screens/Rooms';
 import Customers from './src/screens/Customers';
 import CheckIn from './src/screens/CheckIn';
 import Settings from './src/screens/Settings';
+import * as color from './src/assets/color';
 
 const loginTabs = createStackNavigator(
   {
@@ -110,11 +111,11 @@ const BottomTabs = createBottomTabNavigator(
     }),
     tabBarOptions: {
       activeTintColor: 'white',
-      inactiveTintColor: '#34495e',
+      inactiveTintColor: color.midnight,
       showLabel: true,
       keyboardHidesTabBar: true,
       style: {
-        backgroundColor: '#2e7eff',
+        backgroundColor: color.orange,
       },
     },
   },

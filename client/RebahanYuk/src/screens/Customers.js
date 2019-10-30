@@ -24,6 +24,7 @@ import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage';
 import {MaterialIndicator} from 'react-native-indicators';
 import * as actionsCustomers from '../redux/_actions/customers';
+import * as color from '../assets/color';
 
 class Customers extends Component {
   constructor() {
@@ -107,7 +108,7 @@ class Customers extends Component {
     if (this.props.customers.isLoading) {
       return (
         <MaterialIndicator
-          color="#2e7eff"
+          color={color.orange}
           animating={true}
           style={{
             flex: 1,
@@ -122,7 +123,14 @@ class Customers extends Component {
     return (
       <Container>
         <Header style={styles.header}>
-          <Left />
+          <Left>
+            <Icon
+              type="FontAwesome"
+              name="id-card"
+              size={20}
+              style={{color: 'white'}}
+            />
+          </Left>
           <Body>
             <Title> Customer List </Title>
           </Body>
@@ -254,7 +262,7 @@ class Customers extends Component {
         <View>
           <Fab
             containerStyle={{}}
-            style={{backgroundColor: '#2e7eff'}}
+            style={{backgroundColor: color.orange}}
             position="bottomRight"
             onPress={() => this.toggleModal()}>
             <Icon type="FontAwesome5" name="plus" />
@@ -299,7 +307,7 @@ export default connect(
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#2e7eff',
+    backgroundColor: color.orange,
   },
   footer: {
     backgroundColor: '#2e7eff',

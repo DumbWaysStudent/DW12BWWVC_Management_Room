@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, Image} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {View, Button, Text, Item, Input, Form, Label, Icon} from 'native-base';
+
+import * as color from '../assets/color';
 
 export default class Login extends Component {
   constructor() {
@@ -94,10 +96,13 @@ export default class Login extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.logo}>
-          <Text style={styles.textLogo}> RebahanYuk Admin </Text>
-          <Text style={styles.textLogo2}>
+          <Image
+            source={require('../assets/img/kumpulWhite.png')}
+            style={styles.profImg}
+          />
+          {/* <Text style={styles.textLogo2}>
             Please verify your account here !
-          </Text>
+          </Text> */}
         </View>
 
         <Form style={styles.formlogin}>
@@ -105,7 +110,7 @@ export default class Login extends Component {
             <Label style={styles.textLabel}> E-Mail </Label>
             <Input
               onChangeText={username => this.userValidation(username)}
-              style={{color: 'white'}}
+              style={styles.input}
             />
           </Item>
           <Item floatingLabel last>
@@ -113,7 +118,7 @@ export default class Login extends Component {
             <Input
               secureTextEntry={this.state.pass}
               onChangeText={password => this.passValidation(password)}
-              style={{color: 'white'}}
+              style={styles.input}
             />
             <Icon name={this.state.icon} onPress={() => this.eyeIcon()} />
           </Item>
@@ -130,7 +135,7 @@ export default class Login extends Component {
         </Form>
 
         <Text style={styles.copyright}>
-          RebahanYuk Ver. 0.1 Copyright By Yusril Izza
+          Kumpul&Santuy Ver 1.0 Copyright By Yusril Izza
         </Text>
       </View>
     );
@@ -140,10 +145,13 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2e7eff',
+    backgroundColor: color.orange,
+  },
+  profImg: {
+    width: 280,
+    height: 280,
   },
   logo: {
-    marginTop: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -155,8 +163,7 @@ const styles = StyleSheet.create({
   },
   textLogo2: {
     marginTop: 10,
-    marginBottom: 5,
-    fontSize: 18,
+    fontSize: 14,
     color: 'white',
     fontWeight: 'bold',
   },
@@ -165,23 +172,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   formlogin: {
-    marginTop: 40,
+    marginTop: 10,
     marginHorizontal: 25,
   },
-  btnsign: {
-    marginTop: 60,
-    marginLeft: 8,
-    width: 350,
+  input: {
+    color: 'white',
+    fontWeight: 'bold',
   },
-  btnregister: {
-    marginTop: 0,
+  btnsign: {
+    marginTop: 35,
     marginLeft: 8,
     width: 350,
   },
   copyright: {
     color: 'white',
     fontSize: 12,
-    marginTop: 200,
-    marginHorizontal: 90,
+    marginTop: 150,
+    alignSelf: 'center',
   },
 });

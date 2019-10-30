@@ -23,6 +23,7 @@ import {MaterialIndicator} from 'react-native-indicators';
 import CountDown from 'react-native-countdown-component';
 import * as actionsCheckIn from '../redux/_actions/checkin';
 import * as actionsCustomers from '../redux/_actions/customers';
+import * as color from '../assets/color';
 
 class CheckIn extends Component {
   constructor() {
@@ -159,7 +160,7 @@ class CheckIn extends Component {
     if (this.props.customers.isLoading) {
       return (
         <MaterialIndicator
-          color="#2e7eff"
+          color={color.orange}
           animating={true}
           style={{
             flex: 1,
@@ -174,7 +175,14 @@ class CheckIn extends Component {
     return (
       <Container>
         <Header style={styles.header}>
-          <Left />
+          <Left>
+            <Icon
+              type="FontAwesome"
+              name="check-circle"
+              size={20}
+              style={{color: 'white'}}
+            />
+          </Left>
           <Body>
             <Title>CheckIn List</Title>
           </Body>
@@ -329,10 +337,7 @@ export default connect(
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#2e7eff',
-  },
-  footer: {
-    backgroundColor: '#2e7eff',
+    backgroundColor: color.orange,
   },
   room: {
     margin: 13,
@@ -342,7 +347,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 110,
     height: 70,
-    backgroundColor: '#45aaf2',
+    backgroundColor: color.carrot,
   },
   roomtxt: {
     color: 'white',
