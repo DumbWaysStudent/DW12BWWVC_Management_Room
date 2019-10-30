@@ -123,6 +123,15 @@ class CheckIn extends Component {
     await this.getCheckIn();
   };
 
+  checkOutPut = async () => {
+    const token = this.state.token;
+    const idOrder = this.state.orderId;
+
+    await this.props.handlePutCheckOut(token, idOrder);
+    this.toogleCancelCheckOut();
+    await this.getCheckIn();
+  };
+
   render() {
     return (
       <Container>
@@ -238,7 +247,7 @@ class CheckIn extends Component {
             <Button
               info
               style={styles.btnmodal}
-              onPress={() => this.postRooms()}>
+              onPress={() => this.checkOutPut()}>
               <Text> CHECKOUT </Text>
             </Button>
             <Button
@@ -270,6 +279,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         actionsCheckIn.handlePostCheckIn(token, idRoom, idCustomer, duration),
       ),
+    handlePutCheckOut: (token, idOrder) =>
+      dispatch(actionsCheckIn.handlePutCheckOut(token, idOrder)),
   };
 };
 

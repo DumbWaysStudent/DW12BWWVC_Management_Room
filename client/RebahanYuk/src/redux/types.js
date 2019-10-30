@@ -8,3 +8,4 @@ export const PUT_CUSTOMERS = 'PUT_CUSTOMERS';
 
 export const GET_CHECKIN = 'GET_CHECKIN';
 export const POST_CHECKIN = 'POST_CHECKIN';
+export const PUT_CHECKOUT = 'PUT_CHECKOUT';

@@ -36,6 +36,12 @@ export default reducersCheckIn = (state = initialState, action) => {
         isLoading: false,
       };
     }
+    case `${types.PUT_CHECKOUT}`: {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     default: {
       return state;
     }

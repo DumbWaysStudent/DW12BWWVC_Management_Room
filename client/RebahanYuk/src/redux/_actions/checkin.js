@@ -29,3 +29,15 @@ export const handlePostCheckIn = (token, idRoom, idCustomer, duration) => ({
     },
   }),
 });
+
+export const handlePutCheckOut = (token, idOrder) => ({
+  type: types.PUT_CHECKOUT,
+  payload: axios({
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+    url: `${api_url}/order/${idOrder}`,
+  }),
+});
