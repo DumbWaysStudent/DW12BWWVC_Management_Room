@@ -141,6 +141,29 @@ exports.addCheckIn = (req, res) => {
     });
 };
 
+exports.putCheckOut = (req, res) => {
+  const orderId = req.params.order_id;
+  Orders.update(
+    {
+      is_done: true
+    },
+    {
+      where: { id: orderId }
+    }
+  )
+    .then(data => {
+      res.send({
+        update: true,
+        data
+      });
+    })
+    .catch(() => {
+      res.send({
+        update: false
+      });
+    });
+};
+
 const getCheckIn = data => {
   const newData = data.map(item => {
     const customer = item.customers.map(entry => {
