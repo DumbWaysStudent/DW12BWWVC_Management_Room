@@ -19,6 +19,7 @@ import {
   Input,
 } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
+import {MaterialIndicator} from 'react-native-indicators';
 import * as actionRooms from '../redux/_actions/rooms';
 
 class Rooms extends Component {
@@ -82,6 +83,21 @@ class Rooms extends Component {
   };
 
   render() {
+    if (this.props.rooms.isLoading) {
+      return (
+        <MaterialIndicator
+          color="#2e7eff"
+          animating={true}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 80,
+          }}
+        />
+      );
+    }
+
     return (
       <Container>
         <Header style={styles.header}>
@@ -177,6 +193,7 @@ class Rooms extends Component {
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     rooms: state.rooms,

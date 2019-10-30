@@ -22,6 +22,7 @@ import {
 } from 'native-base';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage';
+import {MaterialIndicator} from 'react-native-indicators';
 import * as actionsCustomers from '../redux/_actions/customers';
 
 class Customers extends Component {
@@ -102,6 +103,22 @@ class Customers extends Component {
   render() {
     const profImg =
       'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTXNM88jFoywO7jEY_mM_dMtHLeCDpAr5O6qRI5bWbxgYX9sLC-';
+
+    if (this.props.customers.isLoading) {
+      return (
+        <MaterialIndicator
+          color="#2e7eff"
+          animating={true}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 80,
+          }}
+        />
+      );
+    }
+
     return (
       <Container>
         <Header style={styles.header}>

@@ -19,6 +19,8 @@ import {
 import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import {MaterialIndicator} from 'react-native-indicators';
+import CountDown from 'react-native-countdown-component';
 import * as actionsCheckIn from '../redux/_actions/checkin';
 import * as actionsCustomers from '../redux/_actions/customers';
 
@@ -107,8 +109,23 @@ class CheckIn extends Component {
         }>
         <View style={styles.roomDisable}>
           <Text style={styles.roomtxtDisable}> {item.room} </Text>
+          {this.CountdownView(duration, orderId)}
         </View>
       </TouchableOpacity>
+    );
+  };
+
+  CountdownView = (duration, orderId) => {
+    return (
+      <CountDown
+        until={duration * 60}
+        size={10}
+        onFinish={() => this.checkOutPutTimer(orderId)}
+        digitStyle={{backgroundColor: '#FFF', width: 20, height: 10}}
+        digitTxtStyle={{color: '#e74c3c'}}
+        timeToShow={['H', 'M', 'S']}
+        timeLabels={{m: null, s: null}}
+      />
     );
   };
 
@@ -132,7 +149,28 @@ class CheckIn extends Component {
     await this.getCheckIn();
   };
 
+  checkOutPutTimer = async orderId => {
+    const token = this.state.token;
+    await this.props.handlePutCheckOut(token, orderId);
+    await this.getCheckIn();
+  };
+
   render() {
+    if (this.props.customers.isLoading) {
+      return (
+        <MaterialIndicator
+          color="#2e7eff"
+          animating={true}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 80,
+          }}
+        />
+      );
+    }
+
     return (
       <Container>
         <Header style={styles.header}>
@@ -325,6 +363,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 22,
+    marginBottom: 5,
   },
   icon: {
     color: 'white',

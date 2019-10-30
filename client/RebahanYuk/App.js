@@ -100,7 +100,7 @@ const BottomTabs = createBottomTabNavigator(
         }
         return (
           <Icon
-            type="FontAwesome5"
+            type="FontAwesome"
             name={iconName}
             size={20}
             style={{color: tintColor}}
@@ -110,7 +110,7 @@ const BottomTabs = createBottomTabNavigator(
     }),
     tabBarOptions: {
       activeTintColor: 'white',
-      inactiveTintColor: '#00204f',
+      inactiveTintColor: '#34495e',
       showLabel: true,
       keyboardHidesTabBar: true,
       style: {
