@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, TouchableOpacity, Image} from 'react-native';
-import axios from 'axios';
+import {api_url, axios} from '../api-url';
 import AsyncStorage from '@react-native-community/async-storage';
 import {View, Button, Text, Item, Input, Form, Label, Icon} from 'native-base';
 
@@ -23,7 +23,7 @@ export default class Login extends Component {
   userLogin = () => {
     axios({
       method: 'POST',
-      url: `http://192.168.137.1:4000/api/v1/login`,
+      url: `${api_url}/login`,
       data: {
         email: this.state.username,
         password: this.state.password,
