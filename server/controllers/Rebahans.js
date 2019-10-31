@@ -164,6 +164,63 @@ exports.putCheckOut = (req, res) => {
     });
 };
 
+exports.deleteRooms = (req, res) => {
+  const idRoom = req.params.room_id;
+
+  Rooms.destroy({
+    where: { id: idRoom }
+  })
+    .then(() => {
+      res.send({
+        delete: true
+      });
+    })
+    .catch(() => {
+      res.send({
+        delete: false
+      });
+    });
+};
+
+exports.deleteCustomers = (req, res) => {
+  const idCustomer = req.params.cust_id;
+
+  Customers.destroy({
+    where: { id: idCustomer }
+  })
+    .then(() => {
+      res.send({
+        delete: true
+      });
+    })
+    .catch(() => {
+      res.send({
+        delete: false
+      });
+    });
+};
+
+exports.showOrders = (req, res) => {
+  Orders.findAll({
+    include: [
+      {
+        model: Customers
+      },
+      {
+        model: Rooms
+      }
+    ]
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(() => {
+      res.send({
+        error: true
+      });
+    });
+};
+
 const getCheckIn = data => {
   const newData = data.map(item => {
     const customer = item.customers.map(entry => {

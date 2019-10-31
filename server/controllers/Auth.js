@@ -31,3 +31,25 @@ exports.login = (req, res) => {
       });
     });
 };
+
+exports.register = (req, res) => {
+  Users.create({
+    email: req.body.email,
+    password: req.body.password
+  })
+    .then(data => {
+      if (data) {
+        const token = jwt.sign({ id: data.id }, "my-secret-key");
+        res.send({
+          id: data.id,
+          email: data.email,
+          token
+        });
+      }
+    })
+    .catch(() => {
+      res.send({
+        error: true
+      });
+    });
+};

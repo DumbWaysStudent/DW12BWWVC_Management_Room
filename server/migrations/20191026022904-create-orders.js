@@ -28,18 +28,17 @@ module.exports = {
         onUpdate: "cascade",
         onDelete: "cascade"
       },
-      check_in: {
-        type: Sequelize.DATE
-      },
-      time: {
-        type: Sequelize.TIME
+      duration: {
+        type: Sequelize.INTEGER
       },
       is_done: {
         type: Sequelize.BOOLEAN
       },
       is_booked: {
-        allowNull: false,
         type: Sequelize.BOOLEAN
+      },
+      end_time: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
