@@ -1,18 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, Image, View} from 'react-native';
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Left,
-  Right,
-  Body,
-  Text,
-  Button,
-  Icon,
-} from 'native-base';
+import {StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Container, Text, Button} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as color from '../assets/color';
 
@@ -49,36 +38,27 @@ class Settings extends Component {
   render() {
     return (
       <Container>
-        <Header style={styles.header}>
-          <Left>
-            <Icon
-              type="FontAwesome"
-              name="cog"
-              size={20}
-              style={{color: 'white'}}
-            />
-          </Left>
-          <Body>
-            <Title> Settings </Title>
-          </Body>
-          <Right />
-        </Header>
-
-        <Content>
+        <View style={styles.rectStack}>
+          <View style={styles.rect} />
           <Image
             source={{
               uri:
-                'http://www.ahm.org.py/awk/wp-content/uploads/2017/01/user.jpg',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTXNM88jFoywO7jEY_mM_dMtHLeCDpAr5O6qRI5bWbxgYX9sLC-',
             }}
-            style={styles.profImg}
+            style={styles.ellipse3}
           />
-          <Text style={styles.proftxt}> rebahan@admin.com </Text>
-          <Text style={styles.profnote}> ADMIN </Text>
-
-          <Button danger onPress={() => this.logout()} style={styles.btnlog}>
-            <Text> Log Out </Text>
-          </Button>
-        </Content>
+        </View>
+        <View style={{alignItems: 'center'}}>
+          <Text style={styles.text2}>Kumpul & Santuy Coworking Space</Text>
+          <Text style={styles.text3}>Admin Users</Text>
+        </View>
+        <Button
+          danger
+          small
+          onPress={() => this.logout()}
+          style={styles.btnlog}>
+          <Text> Log Out </Text>
+        </Button>
       </Container>
     );
   }
@@ -98,39 +78,60 @@ export default connect(
 )(Settings);
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: color.orange,
-  },
-  footer: {
-    backgroundColor: '#2e7eff',
-  },
-  container: {
-    marginVertical: 50,
-  },
-  profImg: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    alignSelf: 'center',
-    marginVertical: 25,
-  },
-  proftxt: {
-    alignSelf: 'center',
-    fontSize: 20,
-    letterSpacing: 2,
-    fontWeight: '600',
-  },
-  profnote: {
-    marginTop: 5,
-    alignSelf: 'center',
-    fontSize: 14,
-    letterSpacing: 4,
-    color: '#00204f',
-  },
   btnlog: {
     marginTop: 30,
     alignSelf: 'center',
     justifyContent: 'center',
     width: 230,
+    borderRadius: 15,
+  },
+  rectStack: {
+    width: 454,
+    height: 305,
+  },
+  rect: {
+    top: 0,
+    left: 0,
+    width: 800,
+    height: 254,
+    backgroundColor: color.orange,
+    position: 'absolute',
+  },
+  ellipse3: {
+    top: 158,
+    width: 147,
+    height: 147,
+    position: 'absolute',
+    left: 130,
+    borderRadius: 100,
+    borderWidth: 4,
+    borderColor: 'white',
+  },
+  text2: {
+    color: 'rgba(0,0,0,1)',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 15,
+  },
+  text3: {
+    color: 'rgba(0,0,0,1)',
+    fontSize: 16,
+    fontFamily: 'roboto-300',
+    marginTop: 6,
+    alignSelf: 'center',
+  },
+  button: {
+    width: 195,
+    height: 33,
+    backgroundColor: 'rgba(222,34,34,1)',
+    marginTop: 51,
+    marginLeft: 82,
+  },
+  text: {
+    color: 'rgba(255,255,255,1)',
+    fontSize: 18,
+    fontFamily: 'roboto-500',
+    marginTop: 8,
+    marginLeft: 72,
   },
 });

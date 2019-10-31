@@ -39,7 +39,7 @@ export default class Login extends Component {
       if (login !== false) {
         AsyncStorage.setItem('token', this.state.token);
         AsyncStorage.setItem('id', JSON.stringify(this.state.id));
-        this.props.navigation.navigate('Rooms');
+        this.props.navigation.navigate('CheckIn');
       } else {
         alert('Login Failed !!');
         console.log('Login Failed');
@@ -97,12 +97,9 @@ export default class Login extends Component {
       <View style={styles.container}>
         <View style={styles.logo}>
           <Image
-            source={require('../assets/img/kumpulWhite.png')}
+            source={require('../assets/img/kumpulWhite2.png')}
             style={styles.profImg}
           />
-          {/* <Text style={styles.textLogo2}>
-            Please verify your account here !
-          </Text> */}
         </View>
 
         <Form style={styles.formlogin}>
@@ -148,31 +145,20 @@ const styles = StyleSheet.create({
     backgroundColor: color.orange,
   },
   profImg: {
-    width: 280,
-    height: 280,
+    marginTop: 50,
+    width: 350,
+    height: 200,
   },
   logo: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  textLogo: {
-    marginTop: 10,
-    fontSize: 25,
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  textLogo2: {
-    marginTop: 10,
-    fontSize: 14,
-    color: 'white',
-    fontWeight: 'bold',
   },
   textLabel: {
     color: 'white',
     fontWeight: 'bold',
   },
   formlogin: {
-    marginTop: 10,
+    marginTop: 0,
     marginHorizontal: 25,
   },
   input: {

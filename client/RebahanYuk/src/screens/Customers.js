@@ -142,7 +142,7 @@ class Customers extends Component {
           onRefresh={this.handlerefresh}
           refreshing={this.state.isrefreshing}
           renderItem={({item}) => (
-            <View key={item.id}>
+            <View key={item.id} style={styles.customCon}>
               <List>
                 <ListItem avatar>
                   <Left>
@@ -314,6 +314,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: 'white',
+  },
+  customCon: {
+    marginTop: 3,
   },
   txtname: {
     fontWeight: 'bold',
