@@ -93,7 +93,7 @@ const BottomTabs = createBottomTabNavigator(
         if (routeName === 'CheckIn') {
           iconName = `check-circle`;
         } else if (routeName === 'Rooms') {
-          iconName = `bed`;
+          iconName = `building`;
         } else if (routeName === 'Customers') {
           iconName = `id-card`;
         } else if (routeName === 'Settings') {

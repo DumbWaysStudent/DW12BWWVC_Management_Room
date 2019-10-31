@@ -58,6 +58,10 @@ class Customers extends Component {
     this.props.handleGetCustomers((token = this.state.token));
   };
 
+  refreshData = async () => {
+    await this.getCustomers();
+  };
+
   postCustomer = async () => {
     this.toggleModal();
     await this.props.handlePostCustomers(
@@ -134,7 +138,16 @@ class Customers extends Component {
           <Body>
             <Title> Customer List </Title>
           </Body>
-          <Right />
+          <Right>
+            <TouchableOpacity onPress={() => this.refreshData()}>
+              <Icon
+                type="FontAwesome"
+                name="refresh"
+                size={20}
+                style={{color: 'white'}}
+              />
+            </TouchableOpacity>
+          </Right>
         </Header>
 
         <FlatList

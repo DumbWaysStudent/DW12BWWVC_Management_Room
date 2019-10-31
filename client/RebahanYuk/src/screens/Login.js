@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, Image} from 'react-native';
 import {api_url, axios} from '../api-url';
 import AsyncStorage from '@react-native-community/async-storage';
 import {View, Button, Text, Item, Input, Form, Label, Icon} from 'native-base';
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   copyright: {
     color: 'white',
     fontSize: 12,
-    marginTop: 150,
+    marginTop: 200,
     alignSelf: 'center',
   },
 });

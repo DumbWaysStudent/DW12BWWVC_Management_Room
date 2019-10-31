@@ -53,6 +53,10 @@ class Rooms extends Component {
     await this.props.handleGetRooms((token = this.state.token));
   };
 
+  refreshData = async () => {
+    await this.getRooms();
+  };
+
   postRooms = async () => {
     this.toggleModal();
     await this.props.handlePostRooms(
@@ -106,7 +110,7 @@ class Rooms extends Component {
           <Left>
             <Icon
               type="FontAwesome"
-              name="bed"
+              name="building"
               size={20}
               style={{color: 'white'}}
             />
@@ -114,7 +118,16 @@ class Rooms extends Component {
           <Body>
             <Title>Rooms List</Title>
           </Body>
-          <Right />
+          <Right>
+            <TouchableOpacity onPress={() => this.refreshData()}>
+              <Icon
+                type="FontAwesome"
+                name="refresh"
+                size={20}
+                style={{color: 'white'}}
+              />
+            </TouchableOpacity>
+          </Right>
         </Header>
 
         <FlatList

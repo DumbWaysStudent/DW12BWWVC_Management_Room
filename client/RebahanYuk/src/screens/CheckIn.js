@@ -60,6 +60,11 @@ class CheckIn extends Component {
     this.props.handleGetCheckIn((token = this.state.token));
   };
 
+  refreshData = async () => {
+    await this.getCheckIn();
+    await this.getCustomers();
+  };
+
   toggleCheckInModal(idRoom, room) {
     this.setState({idRoom, room});
     this.setState({CheckInVisible: !this.state.CheckInVisible});
@@ -111,18 +116,18 @@ class CheckIn extends Component {
         }>
         <View style={styles.roomDisable}>
           <Text style={styles.roomtxtDisable}> {item.room} </Text>
-          {this.CountdownView(duration, orderId)}
+          {this.CountdownView(duration, orderId, room)}
         </View>
       </TouchableOpacity>
     );
   };
 
-  CountdownView = (duration, orderId) => {
+  CountdownView = (duration, orderId, room) => {
     return (
       <CountDown
         until={duration * 60}
         size={10}
-        onFinish={() => this.checkOutPutTimer(orderId)}
+        onFinish={() => this.checkOutPutTimer(orderId, room)}
         digitStyle={{backgroundColor: '#FFF', width: 20, height: 10}}
         digitTxtStyle={{color: '#e74c3c'}}
         timeToShow={['H', 'M', 'S']}
@@ -151,8 +156,9 @@ class CheckIn extends Component {
     await this.getCheckIn();
   };
 
-  checkOutPutTimer = async orderId => {
+  checkOutPutTimer = async (orderId, room) => {
     const token = this.state.token;
+    alert(`Room ${room} booking time out !! `);
     await this.props.handlePutCheckOut(token, orderId);
     await this.getCheckIn();
   };
@@ -173,6 +179,8 @@ class CheckIn extends Component {
       );
     }
 
+    // console.log('Before ', this.state.idCustomer);
+
     return (
       <Container>
         <Header style={styles.header}>
@@ -187,7 +195,16 @@ class CheckIn extends Component {
           <Body>
             <Title>CheckIn List</Title>
           </Body>
-          <Right />
+          <Right>
+            <TouchableOpacity onPress={() => this.refreshData()}>
+              <Icon
+                type="FontAwesome"
+                name="refresh"
+                size={20}
+                style={{color: 'white'}}
+              />
+            </TouchableOpacity>
+          </Right>
         </Header>
 
         <FlatList
